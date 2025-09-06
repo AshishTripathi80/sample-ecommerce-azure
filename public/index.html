@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sample E-Commerce</title>
+</head>
+<body>
+  <h1>Welcome to Sample E-Commerce</h1>
+  <p>Here are some products:</p>
+  <ul id="product-list"></ul>
+
+  <h3>Product Image (from Blob Storage later):</h3>
+  <img src="https://YOUR-BLOB-URL/logo.png" width="200" />
+
+  <script>
+    fetch("/api/products")
+      .then(res => res.json())
+      .then(products => {
+        const list = document.getElementById("product-list");
+        products.forEach(p => {
+          const item = document.createElement("li");
+          item.textContent = `${p.name} - $${p.price}`;
+          list.appendChild(item);
+        });
+      });
+  </script>
+</body>
+</html>
