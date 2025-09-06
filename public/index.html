@@ -15,12 +15,22 @@
     fetch("/api/products")
       .then(res => res.json())
       .then(products => {
+        console.log('Products received:', products); // Debug log
         const list = document.getElementById("product-list");
         products.forEach(p => {
+          console.log('Product:', p); // Debug log
           const item = document.createElement("li");
-          item.textContent = `${p.name} - $${p.price}`;
+          // Try different possible column names
+          const name = p.name || p.Name || p.ProductName || p.product_name || 'Unknown Product';
+          const price = p.price || p.Price || p.ProductPrice || p.product_price || 'N/A';
+          item.textContent = `${name} - $${price}`;
           list.appendChild(item);
         });
+      })
+      .catch(err => {
+        console.error('Error fetching products:', err);
+        const list = document.getElementById("product-list");
+        list.innerHTML = '<li>Error loading products</li>';
       });
   </script>
 </body>
