@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 8080;
 const dbConfig = {
   user: "ashish", // your SQL username
   password: "Ichigo@919818", // your SQL password
-  server: "ecommerce-sql-server-ashish", // from Azure
+  server: "ecommerce-sql-server-ashish.database.windows.net", // from Azure
   database: "EcommerceDB",
   options: {
     encrypt: true, // required for Azure
