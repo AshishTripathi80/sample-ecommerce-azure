@@ -41,8 +41,7 @@ app.post("/api/orders", async (req, res) => {
   try {
     const order = req.body;
 
-    // Replace with your actual Azure Function URL
-    const functionUrl = "https://ecommerce-orders-func-drb4arfje0bja5ha.centralindia-01.azurewebsites.net/api/ProcessOrder";
+    const functionUrl="https://ecommerce-orders-func-drb4arfje0bja5ha.centralindia-01.azurewebsites.net/api/ProcessOrder?";
 
     const response = await fetch(functionUrl, {
       method: "POST",
