@@ -15,23 +15,42 @@
     fetch("/api/products")
       .then(res => res.json())
       .then(products => {
-        console.log('Products received:', products); // Debug log
         const list = document.getElementById("product-list");
         products.forEach(p => {
-          console.log('Product:', p); // Debug log
           const item = document.createElement("li");
-          // Try different possible column names
-          const name = p.name || p.Name || p.ProductName || p.product_name || 'Unknown Product';
-          const price = p.price || p.Price || p.ProductPrice || p.product_price || 'N/A';
-          item.textContent = `${name} - $${price}`;
+  
+          const name = p.Name || p.name || 'Unknown Product';
+          const price = p.Price || p.price || 'N/A';
+  
+          item.textContent = `${name} - $${price} `;
+  
+          // Create order button
+          const btn = document.createElement("button");
+          btn.textContent = "Order";
+          btn.onclick = async () => {
+            try {
+              const response = await fetch("/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId: p.Id || p.id, quantity: 1 })
+              });
+              const result = await response.json();
+              alert(result.message || "Order processed");
+            } catch (err) {
+              alert("Failed to place order");
+              console.error(err);
+            }
+          };
+  
+          item.appendChild(btn);
           list.appendChild(item);
         });
       })
       .catch(err => {
         console.error('Error fetching products:', err);
-        const list = document.getElementById("product-list");
-        list.innerHTML = '<li>Error loading products</li>';
+        document.getElementById("product-list").innerHTML = '<li>Error loading products</li>';
       });
   </script>
+  
 </body>
 </html>

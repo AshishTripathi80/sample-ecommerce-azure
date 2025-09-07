@@ -1,18 +1,22 @@
 const express = require("express");
 const path = require("path");
 const sql = require("mssql");
+const fetch = require("node-fetch");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// SQL config (use your own details from Azure connection string)
+// Middleware for JSON body parsing
+app.use(express.json());
+
+// SQL config
 const dbConfig = {
-  user: "ashish", // your SQL username
-  password: "Ichigo@919818", // your SQL password
-  server: "ecommerce-sql-server-ashish.database.windows.net", // from Azure
+  user: "ashish",
+  password: "Ichigo@919818",
+  server: "ecommerce-sql-server-ashish.database.windows.net",
   database: "EcommerceDB",
   options: {
-    encrypt: true, // required for Azure
+    encrypt: true,
     trustServerCertificate: false
   }
 };
@@ -29,6 +33,29 @@ app.get("/api/products", async (req, res) => {
   } catch (err) {
     console.error("Database error:", err);
     res.status(500).send("Database connection failed");
+  }
+});
+
+// Order endpoint -> call Azure Function
+app.post("/api/orders", async (req, res) => {
+  try {
+    const order = req.body;
+
+    // Replace with your actual Azure Function URL
+    const functionUrl = "https://ecommerce-orders-func-drb4arfje0bja5ha.centralindia-01.azurewebsites.net/api/ProcessOrder";
+
+    const response = await fetch(functionUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order)
+    });
+
+    const data = await response.json();
+    res.json(data);
+
+  } catch (err) {
+    console.error("Order function error:", err);
+    res.status(500).send("Failed to process order");
   }
 });
 
