@@ -1,6 +1,18 @@
 const express = require("express");
 const path = require("path");
 const sql = require("mssql");
+const appInsights = require("applicationinsights");
+
+appInsights.setup("169faede-a3a6-4399-b09a-cb8ca172e7a3") // from Azure Application Insights resource
+    .setAutoDependencyCorrelation(true)
+    .setAutoCollectRequests(true)
+    .setAutoCollectPerformance(true)
+    .setAutoCollectExceptions(true)
+    .setAutoCollectDependencies(true)
+    .setAutoCollectConsole(true, true)
+    .setSendLiveMetrics(true)
+    .start();
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
