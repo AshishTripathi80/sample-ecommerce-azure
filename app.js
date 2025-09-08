@@ -1,7 +1,6 @@
 const express = require("express");
 const path = require("path");
 const sql = require("mssql");
-const fetch = require("node-fetch");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -17,8 +16,8 @@ const dbConfig = {
   database: "EcommerceDB",
   options: {
     encrypt: true,
-    trustServerCertificate: false
-  }
+    trustServerCertificate: false,
+  },
 };
 
 // Serve static files
@@ -41,17 +40,18 @@ app.post("/api/orders", async (req, res) => {
   try {
     const order = req.body;
 
-    const functionUrl="https://ecommerce-orders-func-drb4arfje0bja5ha.centralindia-01.azurewebsites.net/api/ProcessOrder?";
+    const functionUrl =
+      "https://ecommerce-orders-func-drb4arfje0bja5ha.centralindia-01.azurewebsites.net/api/ProcessOrder";
 
+    // Use built-in fetch (Node.js 18+)
     const response = await fetch(functionUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(order)
+      body: JSON.stringify(order),
     });
 
     const data = await response.json();
     res.json(data);
-
   } catch (err) {
     console.error("Order function error:", err);
     res.status(500).send("Failed to process order");
