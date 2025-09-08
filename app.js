@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/api/products", async (req, res) => {
   try {
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    //await new Promise(resolve => setTimeout(resolve, 3000));
     let pool = await sql.connect(dbConfig);
     let result = await pool.request().query("SELECT * FROM Products");
     res.json(result.recordset);
