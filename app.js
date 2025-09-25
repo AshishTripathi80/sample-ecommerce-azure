@@ -25,7 +25,7 @@ app.use(express.json());
 const dbConfig = {
   user: "ashish",
   password: "Ichigo@919818",
-  server: "ecommerce-sql-server-ashish.database.windows.net",
+  server: "ecommercesqlserverashish.database.windows.net",
   database: "EcommerceDB",
   options: {
     encrypt: true,
