@@ -8,10 +8,22 @@
   <p>Here are some products:</p>
   <ul id="product-list"></ul>
 
-  <h3>Product Image (from Blob Storage later):</h3>
-  <img src="https://ecommercestorageashish.blob.core.windows.net/product-images/Laptop.jpg?sp=r&st=2025-09-26T04:26:09Z&se=2025-10-11T12:41:09Z&spr=https&sv=2024-11-04&sr=b&sig=w4kWFzX%2B%2FVsu9TwhOZIw1Y9r%2BpTJ7Kxpzso7%2FBy09iI%3D" width="200" />
+  <h3>Product Image (from Blob Storage):</h3>
+  <img id="product-image" width="200" alt="Loading..." />
 
   <script>
+    // Load product image from blob storage
+    fetch("/api/images/Laptop.jpg")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("product-image").src = data.imageUrl;
+      })
+      .catch(err => {
+        console.error('Error loading image:', err);
+        document.getElementById("product-image").alt = "Failed to load image";
+      });
+
+    // Load products
     fetch("/api/products")
       .then(res => res.json())
       .then(products => {

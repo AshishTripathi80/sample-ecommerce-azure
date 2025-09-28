@@ -5,7 +5,7 @@ const sql = require("mssql");
 const appInsights = require("applicationinsights");
 
 appInsights
-  .setup("169faede-a3a6-4399-b09a-cb8ca172e7a3") // from Azure Application Insights resource
+  .setup(process.env.APP_INSIGHTS_KEY) // from Azure Application Insights resource
   .setAutoDependencyCorrelation(true)
   .setAutoCollectRequests(true)
   .setAutoCollectPerformance(true)
@@ -23,13 +23,13 @@ app.use(express.json());
 
 // SQL config
 const dbConfig = {
-  user: "ashish",
-  password: "Ichigo@919818",
-  server: "ecommercesqlserverashish.database.windows.net",
-  database: "EcommerceDB",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
   options: {
-    encrypt: true,
-    trustServerCertificate: false,
+    encrypt: process.env.DB_ENCRYPT === "true",
+    trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === "true",
   },
 };
 
@@ -49,13 +49,24 @@ app.get("/api/products", async (req, res) => {
   }
 });
 
+// Get blob storage image URL
+app.get("/api/images/:imageName", (req, res) => {
+  try {
+    const imageName = req.params.imageName;
+    const imageUrl = `${process.env.BLOB_STORAGE_URL}/product-images/${imageName}?${process.env.BLOB_SAS_TOKEN}`;
+    res.json({ imageUrl });
+  } catch (err) {
+    console.error("Image URL error:", err);
+    res.status(500).send("Failed to get image URL");
+  }
+});
+
 // Order endpoint -> call Azure Function
 app.post("/api/orders", async (req, res) => {
   try {
     const order = req.body;
 
-    const functionUrl =
-      "https://ecommerce-orders-func-drb4arfje0bja5ha.centralindia-01.azurewebsites.net/api/ProcessOrder";
+    const functionUrl = process.env.AZURE_FUNCTION_URL;
 
     // Use built-in fetch (Node.js 18+)
     const response = await fetch(functionUrl, {
