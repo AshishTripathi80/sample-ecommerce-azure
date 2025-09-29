@@ -49,6 +49,12 @@ app.get("/api/products", async (req, res) => {
   }
 });
 
+app.get("/api/slowtest", async (req, res) => {
+  await new Promise(resolve => setTimeout(resolve, 3000)); // 3 sec delay
+  res.send("This was slow!");
+});
+
+
 // Get blob storage image URL
 app.get("/api/images/:imageName", (req, res) => {
   try {
